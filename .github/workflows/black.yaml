@@ -1,0 +1,50 @@
+on:
+  workflow_call:
+    inputs:
+      src:
+        required: false
+        type: string
+        default: "."
+      options:
+        required: false
+        type: string
+        default: ""
+      py-version:
+        required: false
+        type: string
+        default: "3.x"
+
+jobs:
+  black:
+    name: "Perform code formatting via black"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: "Set up python ${{ inputs.py-version }}"
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ inputs.py-version }}
+
+      - name: "Install dependencies"
+        run: pip install black
+
+      - name: "Run black"
+        run: |
+          git pull
+          black ${{ inputs.src }} ${{ inputs.options }}
+
+      - name: If needed, commit black changes to the pull request
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A && git diff-index --cached --quiet HEAD || git commit -m 'auto-formats with Black'
+
+      - name: "Push black changes"
+        uses: ad-m/github-push-action@v0.5.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}

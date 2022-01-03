@@ -1,0 +1,36 @@
+on:
+  workflow_call:
+    inputs:
+      src:
+        required: false
+        type: string
+        default: "."
+      options:
+        required: false
+        type: string
+        default: "-r"
+      py-version:
+        required: false
+        type: string
+        default: "3.x"
+
+jobs:
+  lint:
+    name: "Perform security checks via bandit"
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: "Set up python ${{ inputs.py-version }}"
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ inputs.py-version }}
+
+    - name: "Install dependencies"
+      run: |
+        python -m pip install --upgrade pip
+        pip install bandit
+
+    - name: "Run bandit"
+      run: bandit ${{ inputs.src }} ${{ inputs.options }}
