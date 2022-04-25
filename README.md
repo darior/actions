@@ -26,7 +26,9 @@ jobs:
 <br/>
 
 ## Available workflows  
+[Docker](#docker)
 
+[Python](#python)
 
 ## Docker  
 ### build-and-push-to-shr-ecr: *build and ship docker images*
