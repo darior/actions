@@ -1,7 +1,9 @@
 # Actions
-A collection of reusable github actions for python
+A collection of reusable github actions for facilitating CI/CD at MyOme.
 
-<br/>
+[How to use](#how-to-use)  
+[Docker workflows](#docker)  
+[Python workflows](#python)
 
 ## How to use
 In your .github/workflows directory, create a yaml file (such as main.yaml). Add a job for each desired workflow with the `uses` keyword. Use the `with` keyword to pass any desired variables.
@@ -23,10 +25,19 @@ jobs:
       py-version: "3.9"
 ```
 
-<br/>
+## Docker  
 
-## Available workflows
+### build-and-push-to-shr-ecr:  
 
+&emsp;**Inputs**   
+&emsp;`dockerfile`: dockerfile to build (defaults to "Dockerfile")  
+&emsp;`build_context`: build context for docker build command (defaults to ".")
+
+&emsp;**Secrets**   
+&emsp;`aws-access-key-id`: SHR_ECR_CI_ACCESS_KEY_ID as stored in secrets manager  
+&emsp;`aws-secret-access-key`: SHR_ECR_CI_SECRET_ACCESS_KEY as stored in secrets manager  
+
+## Python  
 ### bandit: *code security checks*
 &emsp;inputs:
   - **src:** source directory (defaults to ".")
