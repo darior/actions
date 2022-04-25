@@ -1,7 +1,9 @@
 # Actions
-A collection of reusable github actions for python
+A collection of reusable github actions for facilitating CI/CD at MyOme.
 
-<br/>
+[How to use](#how-to-use)  
+[Docker workflows](#docker)  
+[Python workflows](#python)
 
 ## How to use
 In your .github/workflows directory, create a yaml file (such as main.yaml). Add a job for each desired workflow with the `uses` keyword. Use the `with` keyword to pass any desired variables.
@@ -23,18 +25,13 @@ jobs:
       py-version: "3.9"
 ```
 
-<br/>
-
-## Available workflows  
-[Docker](#docker)
-
-[Python](#python)
-
 ## Docker  
-### build-and-push-to-shr-ecr: *build and ship docker images*
-&emsp;inputs:
-  - **dockerfile:** dockerfile to build (defaults to "Dockerfile")
-  - **build_context:** build context for docker build command (defaults to ".")
+
+### build-and-push-to-shr-ecr:  
+
+&emsp;**Inputs**   
+&emsp;`dockerfile`: dockerfile to build (defaults to "Dockerfile")  
+&emsp;`build_context`: build context for docker build command (defaults to ".")
 
 ## Python  
 ### bandit: *code security checks*
