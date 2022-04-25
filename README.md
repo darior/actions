@@ -33,6 +33,10 @@ jobs:
 &emsp;`dockerfile`: dockerfile to build (defaults to "Dockerfile")  
 &emsp;`build_context`: build context for docker build command (defaults to ".")
 
+&emsp;**Secrets**   
+&emsp;`aws-access-key-id`: SHR_ECR_CI_ACCESS_KEY_ID as stored in secrets manager  
+&emsp;`aws-secret-access-key`: SHR_ECR_CI_SECRET_ACCESS_KEY as stored in secrets manager  
+
 ## Python  
 ### bandit: *code security checks*
 &emsp;inputs:
