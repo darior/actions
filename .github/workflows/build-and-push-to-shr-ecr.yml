@@ -1,28 +1,35 @@
-name: Build and push to shr ECR
-
 on:
-  push:
-    tags:
-      - '[0-9]+.[0-9]+.[0-9]+.dev[0-9]+'
-      - '[0-9]+.[0-9]+.[0-9]+.a[0-9]+'
-      - '[0-9]+.[0-9]+.[0-9]+.b[0-9]+'
-      - '[0-9]+.[0-9]+.[0-9]+.rc[0-9]+'
-      - '[0-9]+.[0-9]+.[0-9]+'
-      - '[0-9]+.[0-9]+.[0-9]+.post[0-9]+'
+  workflow_call:
+    inputs:
+      dockerfile:
+        required: false
+        type: string
+        default: "Dockerfile"
+      build_context:
+        required: false
+        type: string
+        default: "."
 
+  # Suggested triggers
+  # push:
+  #   tags:
+  #     - '[0-9]+.[0-9]+.[0-9]+.dev[0-9]+'
+  #     - '[0-9]+.[0-9]+.[0-9]+.a[0-9]+'
+  #     - '[0-9]+.[0-9]+.[0-9]+.b[0-9]+'
+  #     - '[0-9]+.[0-9]+.[0-9]+.rc[0-9]+'
+  #     - '[0-9]+.[0-9]+.[0-9]+'
+  #     - '[0-9]+.[0-9]+.[0-9]+.post[0-9]+'
+
+name: Build image and push to shr ECR
 jobs:
-  
-  build:
-    
-    name: Build Image
+  build_and_push:
+    name: Build and Push
     runs-on: ubuntu-latest
 
-   
     steps:
-
     - name: Check out code
       uses: actions/checkout@v2
-    
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -41,5 +48,5 @@ jobs:
         ECR_REPOSITORY: ${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}
         IMAGE_TAG: ${{ github.ref_name }}
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ${{ inputs.dockerfile }} ${{ inputs.build_context }}
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG

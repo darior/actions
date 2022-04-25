@@ -25,8 +25,16 @@ jobs:
 
 <br/>
 
-## Available workflows
+## Available workflows  
 
+
+## Docker  
+### build-and-push-to-shr-ecr: *build and ship docker images*
+&emsp;inputs:
+  - **dockerfile:** dockerfile to build (defaults to "Dockerfile")
+  - **build_context:** build context for docker build command (defaults to ".")
+
+## Python  
 ### bandit: *code security checks*
 &emsp;inputs:
   - **src:** source directory (defaults to ".")
