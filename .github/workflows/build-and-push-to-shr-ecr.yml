@@ -18,6 +18,10 @@ on:
         description: "SHR_ECR_CI_SECRET_ACCESS_KEY as created by terraform and stored in secrets manager"
         required: true 
 
+      pypi-pw:
+        description: "SHR_PYPI_CICD_PWD password for accessing myome pypi server"
+        required: false
+
 jobs:
   build_and_push:
     name: Build and Push
@@ -44,6 +48,9 @@ jobs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}
         IMAGE_TAG: ${{ github.ref_name }}
+        PYPI_USER: github_cicd
+        PYPI_PW: ${{ secrets.pypi-pw }}
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ${{ inputs.dockerfile }} ${{ inputs.build_context }}
+        export DOCKER_BUILDKIT=1
+        docker build --build-arg PYPI_USER=$PYPI_USER --secret id=pypi_pw,env=PYPI_PW -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ${{ inputs.dockerfile }} ${{ inputs.build_context }}
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
