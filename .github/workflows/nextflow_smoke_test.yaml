@@ -1,0 +1,67 @@
+on:
+  workflow_call:
+    inputs:
+      config:
+        required: false
+        type: string
+        default: "workflow/nextflow_smoke_test.config"
+      entry:
+        required: false
+        type: string
+        default: "command_line"
+    secrets:
+      aws-access-key-id:
+        description: "SHR_S3_FLOWS_CI_ACCESS_KEY_ID stored in secrets manager"
+        required: true
+      aws-secret-access-key: 
+        description: "SHR_S3_FLOWS_CI_SECRET_ACCESS_KEY stored in secrets manager"
+        required: true
+
+defaults:
+  run:
+    shell: bash
+    working-directory: nextflow
+
+jobs:
+  run_test:
+    name: Smoke test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Setup java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: 17
+
+    - name: Install Nextflow
+      run: | 
+        wget https://github.com/nextflow-io/nextflow/releases/download/v21.10.6/nextflow-21.10.6-all && \
+        mv nextflow-21.10.6-all nextflow && \
+        chmod a+x nextflow && \
+        mv nextflow /usr/local/bin
+
+    - name: Inject slug/short variables
+      uses: rlespinasse/github-slug-action@v3.x
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.aws-access-key-id }}
+        aws-secret-access-key: ${{ secrets.aws-secret-access-key }}
+        aws-region: us-east-2 
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Run smoke test
+      env:
+        REPOSITORY: ${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}
+      run: | 
+        nextflow run workflow/${REPOSITORY}.nf \
+        -entry ${{ inputs.entry }} \
+        -c ${{ inputs.config }}
