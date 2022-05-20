@@ -1,0 +1,44 @@
+on:
+  workflow_call:
+    inputs:
+      bucket:
+        required: false
+        type: string
+        default: "myome-shr-flows"
+      region:
+        required: false
+        type: string
+        default: "us-east-2"
+    secrets:
+      aws-access-key-id:
+        description: "SHR_S3_FLOWS_CI_ACCESS_KEY_ID stored in secrets manager"
+        required: true
+      aws-secret-access-key: 
+        description: "SHR_S3_FLOWS_CI_SECRET_ACCESS_KEY stored in secrets manager"
+        required: true
+
+jobs:
+  ship_workflow:
+    name: Ship workflow
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Inject slug/short variables
+      uses: rlespinasse/github-slug-action@v3.x
+      
+    - name: Export tagged workflow
+      run: |
+        f() { ref=$1; mkdir $ref && git archive --format=tar $ref | (cd $ref; tar -xvf -); }; f ${{ github.ref_name }}
+
+    - name: Sync to s3
+      uses: jakejarvis/s3-sync-action@master
+      env:
+        AWS_S3_BUCKET: ${{ inputs.bucket }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.aws-access-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.aws-secret-access-key }}
+        AWS_REGION: ${{ inputs.region }}
+        SOURCE_DIR: ${{ github.ref_name }}
+        DEST_DIR: ${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/${{ github.ref_name }}
