@@ -1,0 +1,45 @@
+on:
+  workflow_call:
+    inputs:
+      bucket:
+        required: false
+        type: string
+        default: "myome-shr-flows"
+      region:
+        required: false
+        type: string
+        default: "us-east-2"
+    secrets:
+      aws-access-key-id:
+        description: "SHR_S3_FLOWS_CI_ACCESS_KEY_ID stored in secrets manager"
+        required: true
+      aws-secret-access-key: 
+        description: "SHR_S3_FLOWS_CI_SECRET_ACCESS_KEY stored in secrets manager"
+        required: true
+
+jobs:
+  ship_workflow:
+    name: Ship workflow
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Inject slug/short variables
+      uses: rlespinasse/github-slug-action@v3.x
+      
+    - name: Export tagged workflow
+      run: |
+        f() { ref=$1; mkdir $ref && git archive --format=tar $ref | (cd $ref; tar -xvf -); }; f ${{ github.ref_name }}
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.aws-access-key-id }}
+        aws-secret-access-key: ${{ secrets.aws-secret-access-key }}
+        aws-region: ${{ inputs.region }}
+
+    - name: Copy workflow to shr s3
+      run: |
+        aws s3 cp ${{ github.ref_name }} s3://${{ inputs.bucket }}/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/${{ github.ref_name }} --recursive
