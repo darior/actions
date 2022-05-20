@@ -33,12 +33,11 @@ jobs:
       run: |
         f() { ref=$1; mkdir $ref && git archive --format=tar $ref | (cd $ref; tar -xvf -); }; f ${{ github.ref_name }}
 
-    - name: Sync to s3
-      uses: jakejarvis/s3-sync-action@master
-      env:
-        AWS_S3_BUCKET: ${{ inputs.bucket }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.aws-access-key-id }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.aws-secret-access-key }}
-        AWS_REGION: ${{ inputs.region }}
-        SOURCE_DIR: ${{ github.ref_name }}
-        DEST_DIR: ${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/${{ github.ref_name }}
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-region: ${{ inputs.region }}
+
+    - name: Copy workflow to shr s3
+      run: |
+        aws s3 cp ${{ github.ref_name }} s3://${{ inputs.bucket }}/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/${{ github.ref_name }} --recursive
