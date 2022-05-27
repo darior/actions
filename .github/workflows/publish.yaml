@@ -5,7 +5,10 @@ on:
         required: false
         type: string
         default: "3.x"
-
+    secrets:
+      pypi-pw:
+        description: "SHR_PYPI_CICD_UPLOAD_PWD stored in secrets manager"
+        required: true
 jobs:
   create_package:
     name: Package
@@ -55,4 +58,3 @@ jobs:
       - name: Copy Compiled file
         run: |
           twine upload --repository-url https://pypi.shr.myome.info/simple -u ${PYPI_USER} -p ${PYPI_PW} *
-          
