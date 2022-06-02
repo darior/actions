@@ -9,6 +9,10 @@ on:
         required: false
         type: string
         default: "-v"
+      pip_install_command:
+        required: false
+        type: string
+        default: "pip install pytest"
 
 jobs:
   lint:
@@ -29,7 +33,7 @@ jobs:
     - name: "Install dependencies"
       run: |
         python -m pip install --upgrade pip
-        pip install pytest
+        ${{ inputs.pip_install_command }}
 
     - name: "Run pytest"
       run: pytest ${{ inputs.src }} ${{ inputs.options }}
