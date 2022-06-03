@@ -19,7 +19,7 @@ on:
         default: "3.x"
 
 jobs:
-  lint:
+  bandit:
     name: "Perform security checks via bandit"
     runs-on: ubuntu-latest
 

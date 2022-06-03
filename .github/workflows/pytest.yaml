@@ -15,7 +15,7 @@ on:
         default: "pip install pytest"
 
 jobs:
-  lint:
+  pytest:
     name: "Launch tests via pytest"
     runs-on: ubuntu-latest
     strategy:
