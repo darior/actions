@@ -15,7 +15,7 @@ on:
         default: "pip install flake8"
 
 jobs:
-  lint:
+  flake8:
     name: "Perform style guide enforcement via flake8"
     runs-on: ubuntu-latest
     strategy:

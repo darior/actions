@@ -15,7 +15,7 @@ on:
         default: "pip install mypy"
 
 jobs:
-  lint:
+  mypy:
     name: "Perform static type check via mypy"
     runs-on: ubuntu-latest
     strategy:
