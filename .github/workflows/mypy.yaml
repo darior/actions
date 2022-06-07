@@ -9,9 +9,13 @@ on:
         required: false
         type: string
         default: "-v"
+      pip_install_command:
+        required: false
+        type: string
+        default: "pip install mypy"
 
 jobs:
-  lint:
+  mypy:
     name: "Perform static type check via mypy"
     runs-on: ubuntu-latest
     strategy:
@@ -29,8 +33,7 @@ jobs:
     - name: "Install dependencies"
       run: |
         python -m pip install --upgrade pip
-        pip install mypy
-        mypy --install-types --non-interactive
+        ${{ inputs.pip_install_command }}
 
     - name: "Run mypy"
       run: mypy ${{ inputs.src }} ${{ inputs.options }}

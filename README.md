@@ -51,40 +51,43 @@ jobs:
 
 ## Python  
 ### bandit: *code security checks*
-&emsp;inputs:
-  - **src:** source directory (defaults to ".")
-  - **options:** bandit flags (defaults to "-r")
-  - **py-version:** version of python to use (defaults to "3.x")
+&emsp;**Inputs**  
+&emsp;`src`: source directory (defaults to ".")  
+&emsp;`options`: bandit flags (defaults to "-r")  
+&emsp;`py-version`: version of python to use (defaults to "3.x")  
 
 ### black: *code formatting*
-&emsp;inputs:
-  - **src:** source directory (defaults to ".")
-  - **options:** black flags
-  - **py-version:** version of python to use (defaults to "3.x")
+&emsp;**Inputs**  
+&emsp;`src`: source directory (defaults to ".")  
+&emsp;`options`: black flags  
+&emsp;`py-version`: version of python to use (defaults to "3.x")  
 
-### flake8: *style guide enforcement*
-&emsp;inputs:
-  - **src:** source directory (defaults to ".")
-  - **options:** flake8 flags
+### flake8: *style guide enforcement*  
+&emsp;**Inputs**  
+&emsp;`src`: source directory (defaults to ".")  
+&emsp;`options`: flake8 flags  
 
 ### mypy: *static type checking*
-&emsp;inputs:
-  - **src:** source directory (defaults to ".")
-  - **options:** mypy flags (defaults to "-v")
+&emsp;**Inputs**  
+&emsp;`src`: source directory (defaults to ".")  
+&emsp;`options`: mypy flags (defaults to "-v")  
 
-### publish: *push packages to pypi*
-&emsp;inputs:
-  - **py-version:** version of python to use (defaults to "3.x")
+### publish: *upload packages to Myome SHR pypi*
+&emsp;**Inputs**   
+&emsp;`py-version`: version of python to use (defaults to "3.x")  
+
+&emsp;**Secrets**   
+&emsp;`pypi-pw`: SHR_PYPI_CICD_UPLOAD_PWD stored as Github secret  
 
 ### pylint: *static code analysis*
-&emsp;inputs:
-  - **src:** source directory (defaults to ".")
-  - **options:** pylint flags
+&emsp;**Inputs**  
+&emsp;`src`: source directory (defaults to ".")  
+&emsp;`options`: pylint flags  
 
 ### pytest: *test code runner*
-&emsp;inputs:
-  - **src:** source directory (defaults to ".")
-  - **options:** pytest flags (defaults to "-v")
+&emsp;**Inputs**  
+&emsp;`src`: source directory (defaults to ".")  
+&emsp;`options`: pytest flags (defaults to "-v")  
 
 <br/>
 
