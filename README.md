@@ -39,6 +39,16 @@ jobs:
 
 ## Nextflow  
 
+### nextflow-smoke-test:  
+
+&emsp;**Inputs**  
+&emsp;`config`: Workflow config file (defaults to "workflow/nextflow_smoke_test.config")  
+&emsp;`entry`: Entry point for specific workflow (defaults to "command_line")  
+
+&emsp;**Secrets**   
+&emsp;`aws-access-key-id`: SHR_S3_FLOWS_CI_ACCESS_KEY_ID as stored in secrets manager  
+&emsp;`aws-secret-access-key`: SHR_S3_FLOWS_CI_SECRET_ACCESS_KEY as stored in secrets manager  
+
 ### tag-and-ship-nf-workflow:  
 
 &emsp;**Inputs**  
