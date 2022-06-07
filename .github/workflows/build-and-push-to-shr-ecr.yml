@@ -52,5 +52,5 @@ jobs:
         PYPI_PW: ${{ secrets.pypi-pw }}
       run: |
         export DOCKER_BUILDKIT=1
-        docker build --build-arg PYPI_USER=$PYPI_USER --secret id=pypi_pw,env=PYPI_PW -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ${{ inputs.dockerfile }} ${{ inputs.build_context }}
+        docker build --build-arg PYPI_USER=$PYPI_USER --build-arg IMAGE_TAG=$IMAGE_TAG --secret id=pypi_pw,env=PYPI_PW -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ${{ inputs.dockerfile }} ${{ inputs.build_context }}
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
