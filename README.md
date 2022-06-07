@@ -37,6 +37,18 @@ jobs:
 &emsp;`aws-access-key-id`: SHR_ECR_CI_ACCESS_KEY_ID as stored in secrets manager  
 &emsp;`aws-secret-access-key`: SHR_ECR_CI_SECRET_ACCESS_KEY as stored in secrets manager  
 
+## Nextflow  
+
+### tag-and-ship-nf-workflow:  
+
+&emsp;**Inputs**  
+&emsp;`bucket`: AWS s3 bucket to ship workflow to (defaults to "myome-shr-flows")  
+&emsp;`region`: AWS region where target bucket exists (defaults to "us-east-2")  
+
+&emsp;**Secrets**   
+&emsp;`aws-access-key-id`: SHR_S3_FLOWS_CI_ACCESS_KEY_ID as stored in secrets manager  
+&emsp;`aws-secret-access-key`: SHR_S3_FLOWS_CI_SECRET_ACCESS_KEY as stored in secrets manager  
+
 ## Python  
 ### bandit: *code security checks*
 &emsp;inputs:
