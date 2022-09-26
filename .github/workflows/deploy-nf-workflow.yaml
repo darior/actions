@@ -1,0 +1,47 @@
+on:
+  workflow_call:
+    inputs:
+      deployment_env:
+        required: false
+        type: string
+        default: "dev"
+
+jobs:
+  ship_workflow:
+    name: Ship workflow
+    runs-on: self-hosted
+    container:
+      image: 654122908492.dkr.ecr.us-east-2.amazonaws.com/df_github_runner:0.0.1
+      volumes: 
+        - /home/runner/efs/flows:/efs/flows
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Inject slug/short variables
+      uses: rlespinasse/github-slug-action@v3.x
+
+    - name: Deploy to shr efs
+      run: |
+        git config --global --add safe.directory '*'
+        tag=${{ github.ref_name }}
+        dir=/efs/flows/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/$tag
+        mkdir $dir
+        git archive --format=tar $tag | (cd $dir; tar -xvf -)
+        # useradd -ms /bin/bash nextflow
+        # chgrp -R nextflow $dir
+        # chmod -R a+rX-w $dir
+
+    - name: Deploy to controller
+      env:
+        CTRL_API_TOKEN_DEV: ${{ secrets.CTRL_API_TOKEN_DEV }}
+      run: |
+        tag=${{ github.ref_name }}
+        workflow_id=myome:wf/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/$tag
+        dir=/efs/flows/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/$tag
+        ctrl-post-workflow --ctrl_auth_token $CTRL_API_TOKEN_DEV \
+        --env ${{ inputs.deployment_env }} \
+        --workflow_id $workflow_id \
+        --input_schema_json $dir/nextflow/workflow/inputs.json \
+        --output_schema_json $dir/nextflow/workflow/outputs.json
