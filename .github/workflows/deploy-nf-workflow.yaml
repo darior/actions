@@ -11,7 +11,7 @@ jobs:
     name: Ship workflow
     runs-on: self-hosted
     container:
-      image: 654122908492.dkr.ecr.us-east-2.amazonaws.com/df_github_runner:0.0.2
+      image: 654122908492.dkr.ecr.us-east-2.amazonaws.com/df_github_runner:0.0.1
       volumes: 
         - /efs/flows:/efs/flows
 
@@ -29,6 +29,8 @@ jobs:
         dir=/efs/flows/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/$tag
         mkdir $dir
         git archive --format=tar $tag | (cd $dir; tar -xvf -)
+        useradd -ms /bin/bash -g 9000 -u 9000 runner
+        chown -R runner:runner $dir
 
     - name: Deploy to controller
       env:
