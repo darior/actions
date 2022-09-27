@@ -29,6 +29,7 @@ jobs:
         dir=/efs/flows/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/$tag
         mkdir $dir
         git archive --format=tar $tag | (cd $dir; tar -xvf -)
+        groupadd -g 9000 runner
         useradd -ms /bin/bash -g 9000 -u 9000 runner
         chown -R runner:runner $dir
 
