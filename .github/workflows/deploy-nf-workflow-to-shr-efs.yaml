@@ -36,3 +36,4 @@ jobs:
         groupadd -g 9000 runner
         useradd -ms /bin/bash -g 9000 -u 9000 runner
         chown -R runner:runner $dir
+        chmod -R a+rX-w $dir
