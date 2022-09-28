@@ -36,15 +36,14 @@ jobs:
         elif [ "${{ inputs.efs_dir }}" = "static-data" ]; then
           dir=/efs/${{ inputs.efs_dir }}/$tag
           mkdir $dir
-          git archive --format=tar $tag | (cd $dir; tar --exclude-from=./.tar-excludes -xvf -)
+          git archive --format=tar $tag | (cd $dir; tar --exclude-from=${OLDPWD}/.tar-excludes -xvf -)
 
         # elif [ "${{ inputs.efs_dir }}" = "schemas" ]; then
         #   dir=/efs/${{ inputs.efs_dir }}/$tag
         #   mkdir $dir
-        #   git archive --format=tar $tag schemas | (cd $dir; tar --exclude-from=./.tar-excludes -xvf - --strip=1)
+        #   git archive --format=tar $tag schemas | (cd $dir; tar --exclude-from=${OLDPWD}/.tar-excludes -xvf - --strip=1)
         #   symlink creation function here??
         fi
-        echo $dir
 
         # change ownership so directory can be accessed across accounts
         groupadd -g 9000 runner
