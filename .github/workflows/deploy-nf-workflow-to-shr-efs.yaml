@@ -1,5 +1,10 @@
 on:
   workflow_call:
+    inputs:
+      efs_dir:
+        required: false
+        type: string
+        default: ""
 
 jobs:
   ship_workflow:
@@ -8,7 +13,7 @@ jobs:
     container:
       image: 654122908492.dkr.ecr.us-east-2.amazonaws.com/df_github_runner:0.0.1
       volumes: 
-        - /efs/flows:/efs/flows
+        - /efs/${{ inputs.efs_dir }}:/efs/${{ inputs.efs_dir }}
 
     steps:
     - name: Check out code
@@ -23,7 +28,7 @@ jobs:
         git config --global --add safe.directory "*"
 
         tag=${{ github.ref_name }}
-        dir=/efs/flows/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/$tag
+        dir=/efs/${{ inputs.efs_dir }}/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/$tag
         mkdir $dir
         git archive --format=tar $tag | (cd $dir; tar -xvf -)
 
