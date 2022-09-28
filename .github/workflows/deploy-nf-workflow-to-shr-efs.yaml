@@ -19,11 +19,15 @@ jobs:
 
     - name: Deploy to shr efs
       run: |
+        # required to resolve 'dubious ownership' error in self-hosted runner
+        git config --global --add safe.directory "*"
+
         tag=${{ github.ref_name }}
         dir=/efs/flows/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/$tag
         mkdir $dir
         git archive --format=tar $tag | (cd $dir; tar -xvf -)
+
+        # change ownership so directory can be accessed across accounts
         groupadd -g 9000 runner
         useradd -ms /bin/bash -g 9000 -u 9000 runner
         chown -R runner:runner $dir
-        chmod -R a+rX-w $dir
