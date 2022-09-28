@@ -7,8 +7,8 @@ on:
         default: ""
 
 jobs:
-  ship_workflow:
-    name: Ship workflow
+  deploy_repo:
+    name: Deploy archived repo
     runs-on: self-hosted
     container:
       image: 654122908492.dkr.ecr.us-east-2.amazonaws.com/df_github_runner:0.0.1
