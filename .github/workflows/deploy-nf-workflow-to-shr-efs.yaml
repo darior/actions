@@ -28,19 +28,19 @@ jobs:
         git config --global --add safe.directory "*"
         tag=${{ github.ref_name }}
 
-        if [ "${{ inputs.efs_dir }}" == "flows" ]
+        if [ ${{ inputs.efs_dir }} == "flows" ]
         then
           dir=/efs/${{ inputs.efs_dir }}/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/$tag
           mkdir $dir
           git archive --format=tar $tag | (cd $dir; tar -xvf -)
 
-        elif [ "${{ inputs.efs_dir }}" == "static-data" ]
+        elif [ ${{ inputs.efs_dir }} == "static-data" ]
         then
           dir=/efs/${{ inputs.efs_dir }}/$tag
           mkdir $dir
           git archive --format=tar $tag | (cd $dir; tar --exclude-from=./.tar-excludes -xvf -)
 
-        # elif [ "${{ inputs.efs_dir }}" == "schemas" ]
+        # elif [ ${{ inputs.efs_dir }} == "schemas" ]
         # then
         #   dir=/efs/${{ inputs.efs_dir }}/$tag
         #   mkdir $dir
