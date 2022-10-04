@@ -20,9 +20,9 @@ jobs:
    name: Smoke test
    runs-on: self-hosted
    container:
-     image: 654122908492.dkr.ecr.us-east-2.amazonaws.com/df_github_runner:0.0.1
+     image: 654122908492.dkr.ecr.us-east-2.amazonaws.com/df_github_runner:0.0.2
      volumes:
-       - /home/runner:/home/runner
+       - /root:/root
        - /usr/bin/docker:/usr/bin/docker
  
    steps:
@@ -50,4 +50,4 @@ jobs:
        nextflow run workflow/${REPOSITORY}.nf \
        -entry ${{ inputs.entry }} \
        -c ${{ inputs.config }} \
-       -w /home/runner/actions-runner/_work/${REPOSITORY}/${REPOSITORY}/nextflow/
+       -w /root/actions-runner/_work/${REPOSITORY}/${REPOSITORY}/nextflow/
