@@ -11,9 +11,9 @@ jobs:
     name: Deploy archived repo
     runs-on: self-hosted
     container:
-      image: 654122908492.dkr.ecr.us-east-2.amazonaws.com/df_github_runner:0.0.1
+      image: 654122908492.dkr.ecr.us-east-2.amazonaws.com/df_github_runner:0.0.2
       volumes: 
-        - /efs/${{ inputs.efs_dir }}:/efs/${{ inputs.efs_dir }}
+        - /resources/${{ inputs.efs_dir }}:/resources/${{ inputs.efs_dir }}
 
     steps:
     - name: Check out code
@@ -26,27 +26,11 @@ jobs:
       run: |
         # required to resolve 'dubious ownership' error in self-hosted runner
         git config --global --add safe.directory "*"
-        tag=${{ github.ref_name }}
 
-        if [ "${{ inputs.efs_dir }}" = "flows" ]; then
-          dir=/efs/${{ inputs.efs_dir }}/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/$tag
-          mkdir $dir
-          git archive --format=tar $tag | (cd $dir; tar -xvf -)
-
-        elif [ "${{ inputs.efs_dir }}" = "static-data" ]; then
-          dir=/efs/${{ inputs.efs_dir }}/$tag
-          mkdir $dir
-          git archive --format=tar $tag | (cd $dir; tar --exclude-from=${OLDPWD}/.tar-excludes -xvf -)
-
-        # elif [ "${{ inputs.efs_dir }}" = "schemas" ]; then
-        #   dir=/efs/${{ inputs.efs_dir }}/$tag
-        #   mkdir $dir
-        #   git archive --format=tar $tag schemas | (cd $dir; tar --exclude-from=${OLDPWD}/.tar-excludes -xvf - --strip=1)
-        #   symlink creation function here??
-        fi
+        # deploys the most recent tag that triggered this action
+        make deploy
 
         # change ownership so directory can be accessed across accounts
-        groupadd -g 9000 runner
-        useradd -ms /bin/bash -g 9000 -u 9000 runner
-        chown -R runner:runner $dir
+        # uid:gid specified below matches 'myomeadm'
+        chown -R 9000:9000 $dir
         chmod -R a+rX-w $dir
