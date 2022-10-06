@@ -28,9 +28,10 @@ jobs:
         git config --global --add safe.directory "*"
 
         # deploys the most recent tag that triggered this action
-        make deploy
+        make deploy-${{ github.ref_name }}
 
         # change ownership so directory can be accessed across accounts
         # uid:gid specified below matches 'myomeadm'
+        dir=/resources/${{ inputs.efs_dir }}/${{ github.ref_name }}
         chown -R 9000:9000 $dir
         chmod -R a+rX-w $dir
