@@ -1,0 +1,31 @@
+on:
+  workflow_call:
+
+jobs:
+  deploy_repo:
+    name: Deploy archived nextflow workflow
+    runs-on: self-hosted
+    container:
+      image: 654122908492.dkr.ecr.us-east-2.amazonaws.com/df_github_runner:0.0.2
+      volumes: 
+        - /resources/flows:/resources/flows
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Inject slug/short variables
+      uses: rlespinasse/github-slug-action@v3.x
+
+    - name: Deploy to shr efs
+      run: |
+        # required to resolve 'dubious ownership' error in self-hosted runner
+        git config --global --add safe.directory "*"
+
+        # deploys the most recent tag
+        tag=${{ github.ref_name }}
+        dir=/resources/flows/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/$tag
+        mkdir $dir
+        git archive --format=tar $tag | (cd $dir; tar -xvf -)
+        chown -R 9000:9000 $dir
+	      chmod -R a+rX-w $dir
