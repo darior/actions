@@ -28,4 +28,4 @@ jobs:
         mkdir $dir
         git archive --format=tar $tag | (cd $dir; tar -xvf -)
         chown -R 9000:9000 $dir
-	      chmod -R a+rX-w $dir
+        chmod -R a+rX-w $dir
