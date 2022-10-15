@@ -6,8 +6,8 @@ on:
         type: string
     secrets:
       ctrl_token:
+        description: "CTRL_API_TOKEN_{env} stored in secrets manager."
         required: true
-        type: string
 
 jobs:
   deploy_repo:
