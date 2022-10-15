@@ -1,10 +1,11 @@
 on:
   workflow_call:
     inputs:
-      ctrl_token:
+      deployment_env:
         required: true
         type: string
-      deployment_env:
+    secrets:
+      ctrl_token:
         required: true
         type: string
 
@@ -31,7 +32,7 @@ jobs:
         workflow_id=myome:wf/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/$tag
         dir=/resources/flows/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/$tag
         
-        ctrl-post-workflow --ctrl_auth_token ${{ inputs.ctrl_token }} \
+        ctrl-post-workflow --ctrl_auth_token ${{ secrets.ctrl_token }} \
         --env ${{ inputs.deployment_env }} \
         --workflow_id $workflow_id \
         --input_schema_json $dir/nextflow/workflow/inputs.json \
