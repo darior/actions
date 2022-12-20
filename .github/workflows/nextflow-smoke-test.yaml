@@ -24,6 +24,7 @@ jobs:
      volumes:
        - /root:/root
        - /usr/bin/docker:/usr/bin/docker
+       - /resources/static-data:/resources/static-data
  
    steps:
    - name: Check out code
