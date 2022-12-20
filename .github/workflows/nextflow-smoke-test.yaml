@@ -50,4 +50,5 @@ jobs:
        nextflow run workflow/${REPOSITORY}.nf \
        -entry ${{ inputs.entry }} \
        -c ${{ inputs.config }} \
+       -params-file workflow/nextflow_shared.yaml \
        -w /root/actions-runner/_work/${REPOSITORY}/${REPOSITORY}/nextflow/
