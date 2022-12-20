@@ -46,6 +46,7 @@ jobs:
    - name: Run smoke test
      env:
        REPOSITORY: ${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}
+       LIMS_API_TOKEN: ${{ secrets.LIMS_API_TOKEN_STG }}
      run: |
        nextflow run workflow/${REPOSITORY}.nf \
        -entry ${{ inputs.entry }} \
