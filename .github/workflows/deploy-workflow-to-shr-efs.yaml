@@ -6,7 +6,7 @@ jobs:
     name: Deploy archived nextflow workflow
     runs-on: self-hosted
     container:
-      image: 654122908492.dkr.ecr.us-east-2.amazonaws.com/df_github_runner:0.0.2
+      image: 654122908492.dkr.ecr.us-east-2.amazonaws.com/df_github_runner:0.0.4-dev.0
       volumes: 
         - /resources/flows:/resources/flows
 
@@ -29,3 +29,4 @@ jobs:
         git archive --format=tar $tag | (cd $dir; tar -xvf -)
         chown -R 9000:9000 $dir
         chmod -R a+rX-w $dir
+        cd "$$dir/.."; make-version-symlinks * || true
