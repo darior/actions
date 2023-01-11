@@ -30,3 +30,9 @@ jobs:
         chown -R 9000:9000 $dir
         chmod -R a+rX-w $dir
         cd $dir/.. && make-version-symlinks *
+      
+    - name: Sync efs to s3 for workflow
+      run: |
+        dir=/resources/flows/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}
+        cd $dir
+        aws s3 sync ./ s3://myome-shr-flows/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/ --recursive --delete
