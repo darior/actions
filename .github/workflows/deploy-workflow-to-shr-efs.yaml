@@ -5,8 +5,11 @@ jobs:
   deploy_repo:
     name: Deploy archived nextflow workflow
     runs-on: self-hosted
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.SHR_S3_FLOWS_CI_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.SHR_S3_FLOWS_CI_SECRET_ACCESS_KEY }}
     container:
-      image: 654122908492.dkr.ecr.us-east-2.amazonaws.com/df_github_runner:0.0.4-dev.0
+      image: 654122908492.dkr.ecr.us-east-2.amazonaws.com/df_github_runner:0.0.4
       volumes: 
         - /resources/flows:/resources/flows
 
