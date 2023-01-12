@@ -1,12 +1,22 @@
 on:
   workflow_call:
+    secrets:
+      aws-access-key-id: 
+        description: "SHR_S3_FLOWS_CI_ACCESS_KEY_ID stored in secrets manager"
+        required: true 
+      aws-secret-access-key: 
+        description: "SHR_S3_FLOWS_CI_SECRET_ACCESS_KEY stored in secrets manager"
+        required: true 
 
 jobs:
   deploy_repo:
     name: Deploy archived nextflow workflow
     runs-on: self-hosted
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.aws-access-key-id }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.aws-secret-access-key }}
     container:
-      image: 654122908492.dkr.ecr.us-east-2.amazonaws.com/df_github_runner:0.0.2
+      image: 654122908492.dkr.ecr.us-east-2.amazonaws.com/df_github_runner:0.0.4
       volumes: 
         - /resources/flows:/resources/flows
 
@@ -29,3 +39,10 @@ jobs:
         git archive --format=tar $tag | (cd $dir; tar -xvf -)
         chown -R 9000:9000 $dir
         chmod -R a+rX-w $dir
+        cd $dir/.. && make-version-symlinks *
+      
+    - name: Sync efs to s3 for workflow
+      run: |
+        dir=/resources/flows/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}
+        cd $dir
+        aws s3 sync ./ s3://myome-shr-flows/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/ --delete
