@@ -34,7 +34,7 @@ jobs:
 
         # deploys the most recent tag
         tag=${{ github.ref_name }}
-        dir=/resources/flows/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/$tag
+        dir=/myome/share/flows/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/$tag
         mkdir $dir
         git archive --format=tar $tag | (cd $dir; tar -xvf -)
         chown -R 9000:9000 $dir
@@ -43,6 +43,6 @@ jobs:
       
     - name: Sync efs to s3 for workflow
       run: |
-        dir=/resources/flows/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}
+        dir=/myome/share/flows/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}
         cd $dir
         aws s3 sync ./ s3://myome-shr-flows/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/ --delete || true
