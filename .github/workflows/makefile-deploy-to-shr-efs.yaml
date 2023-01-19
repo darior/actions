@@ -13,7 +13,7 @@ jobs:
     container:
       image: 654122908492.dkr.ecr.us-east-2.amazonaws.com/df_github_runner:0.0.4
       volumes: 
-        - /resources/${{ inputs.efs_dir }}:/resources/${{ inputs.efs_dir }}
+        - /myome/share/${{ inputs.efs_dir }}:/myome/share/${{ inputs.efs_dir }}
 
     steps:
     - name: Check out code

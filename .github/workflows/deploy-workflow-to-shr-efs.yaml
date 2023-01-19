@@ -18,7 +18,7 @@ jobs:
     container:
       image: 654122908492.dkr.ecr.us-east-2.amazonaws.com/df_github_runner:0.0.4
       volumes: 
-        - /resources/flows:/resources/flows
+        - /myome/share/flows:/myome/share/flows
 
     steps:
     - name: Check out code
