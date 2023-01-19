@@ -30,7 +30,7 @@ jobs:
         # deploys the most recent tag
         tag=${{ github.ref_name }}
         workflow_id=myome:wf/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/$tag
-        dir=/resources/flows/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/$tag
+        dir=/myome/share/flows/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}/$tag
         
         ctrl-post-workflow --ctrl_auth_token ${{ secrets.ctrl_token }} \
         --env ${{ inputs.deployment_env }} \
