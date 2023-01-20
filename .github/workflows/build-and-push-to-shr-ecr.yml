@@ -30,8 +30,8 @@ jobs:
     steps:
     - name: Check out code
       uses: actions/checkout@v2
-      with:
-        submodules: true
+    - name: Check out submodules 
+      run: git submodule update --init
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
